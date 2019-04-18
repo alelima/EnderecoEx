@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EnderecoEx</string>
+    <string name="text_rua">Rua</string>
+    <string name="text_cidade">Cidade</string>
+    <string name="text_cep">CEP</string>
+    <string name="button_gravar">Gravar</string>
+</resources>
