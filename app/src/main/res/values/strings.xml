@@ -4,4 +4,10 @@
     <string name="text_cidade">Cidade</string>
     <string name="text_cep">CEP</string>
     <string name="button_gravar">Gravar</string>
+    <string-array name="sentence">
+        <item>O que</item>
+        <item>Bla bla bla</item>
+        <item>Poderia</item>
+        <item>Ser</item>
+    </string-array>
 </resources>

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.nitrox.enderecoex">
 
+    <permission android:name="com.nitrox.enderecoex.provider.PERMISSION"/>
+
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -9,6 +11,14 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <provider
+                android:name=".provider.EnderecoContentProvider"
+                android:authorities="com.nitrox.enderecoex.provider"
+                android:enabled="true"
+                android:exported="true"
+                android:multiprocess="true"
+                android:readPermission="com.nitrox.enderecoex.provider.PERMISSION"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -16,6 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-    </application>
 
+    </application>
 </manifest>
