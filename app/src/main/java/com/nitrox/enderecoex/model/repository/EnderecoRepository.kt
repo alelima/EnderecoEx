@@ -16,9 +16,14 @@ class EnderecoRepository {
 
     fun save(rua: String, cidade: String, cep: String) {
         val endereco = Endereco(UUID.randomUUID().toString(), rua, cidade, cep)
+        enderecoDAO.save(endereco)
     }
 
     fun listAll(): List<Endereco> {
         return enderecoDAO.listAll()
+    }
+
+    fun selectById(id : String) : Endereco {
+        return enderecoDAO.findById(id)
     }
 }

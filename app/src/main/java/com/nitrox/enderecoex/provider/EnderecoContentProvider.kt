@@ -7,15 +7,22 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
+import android.util.Log
 import com.nitrox.enderecoex.R
+import com.nitrox.enderecoex.model.repository.EnderecoRepository
+import com.nitrox.enderecoex.persistence.EnderecoDatabase
 import org.jetbrains.annotations.Contract
 import java.lang.Integer.parseInt
 
 @SuppressLint("Registered")
 class EnderecoContentProvider : ContentProvider() {
+    val TAG = "EnderecoContentProvider"
+
     var mData: Array<String>? = null
 
     private val sUriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+    private val ENDERECOS = 1
+    private val ENDERECOS_ID = 2
 
     override fun onCreate(): Boolean {
         initUriMatching()
@@ -25,42 +32,25 @@ class EnderecoContentProvider : ContentProvider() {
     }
 
     private fun initUriMatching() {
-        sUriMatcher.addURI(EnderecoContrato.AUTHORITY, EnderecoContrato.CONTENT_PATH + "/#", 1)
-        sUriMatcher.addURI(EnderecoContrato.AUTHORITY, EnderecoContrato.CONTENT_PATH, 0)
+        sUriMatcher.addURI(EnderecoContrato.AUTHORITY, EnderecoContrato.CONTENT_PATH, ENDERECOS)
+        sUriMatcher.addURI(EnderecoContrato.AUTHORITY, EnderecoContrato.CONTENT_PATH + "/#", ENDERECOS_ID)
     }
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
         sortOrder: String?): Cursor? {
 
-        var id = -1
+        val enderecoDAO = EnderecoDatabase.getInstance(context).enderecoDao()
+        var cursor : Cursor? = null
         when (sUriMatcher.match(uri)) {
-            0 -> {
-                id = EnderecoContrato.ALL_ITEMS
-                if (selection != null) {
-                    id = Integer.parseInt(selectionArgs!![0])
+            ENDERECOS_ID -> {
+                selection?.let {
+                    cursor = enderecoDAO.selectById(selectionArgs!![0])
                 }
             }
-            1 -> id = parseInt(uri.getLastPathSegment())
-            UriMatcher.NO_MATCH -> {
-                id = -1
+            ENDERECOS ->  {
+                Log.v(TAG, "Cursor da consulta: ${enderecoDAO.listAll().size}")
+                cursor = enderecoDAO.selectAll()
             }
-            else -> {
-                id = -1
-            }
-        }
-        return populateCursor(id)
-    }
-
-    private fun populateCursor(id: Int): Cursor {
-        val cursor = MatrixCursor(arrayOf(EnderecoContrato.CONTENT_PATH))
-        if (id == EnderecoContrato.ALL_ITEMS) {
-            for (i in 0 until mData!!.size) {
-                val word = mData!![i]
-                cursor.addRow(arrayOf<Any>(word))
-            }
-        } else if (id >= 0) {
-            val word = mData!![id]
-            cursor.addRow(arrayOf<Any>(word))
         }
         return cursor
     }
